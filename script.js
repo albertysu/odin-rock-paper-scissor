@@ -9,20 +9,29 @@ function getComputerChoice() {
     }
 }
 
-function playRound(playerSelection) {
-    playerSelection = playerSelection.toLowerCase()
+function playRound(e) {
+    if (!playGame) {
+        return
+    }
+    playerSelection = e.target.id.toLowerCase()
+
     let computerSelection = getComputerChoice()
-    console.log("Player Selected: " + playerSelection)
-    console.log("Computer Selected: " + computerSelection)
+
+    playSelect.textContent = "Player Selected: " + playerSelection
+    compSelect.textContent = "Computer Selected: " + computerSelection
     if (playerSelection == computerSelection) {
-        return 0;
+        winDisplay.textContent = "Tie"
     } else if (playerSelection == "rock" && computerSelection == "scissor" || 
     playerSelection == "paper" && computerSelection == "rock" || 
     playerSelection == "scissor" && computerSelection == "paper") {
-        return 1;
+        console.log("Player won this round.")
+        winDisplay.textContent = "Player won this round."
+        playerScore += 1
     } else {
-        return 2;
+        winDisplay.textContent = "Computer won this round."
+        computerScore += 1
     }
+    updateScore()
 }
 
 function game() {
@@ -49,3 +58,42 @@ function game() {
         }
     }
 }
+
+function updateScore() {
+    playDisplay.textContent = "Player: " + playerScore
+    compDisplay.textContent = "Computer: " + computerScore
+    if (playerScore == 5) {
+        console.log("Player has won the game")
+    } else if (computerScore == 5) {
+        console.log("Computer has won the game")
+    } 
+    gameOver()
+}
+
+function gameOver() {
+    if (playerScore == 5) {
+        winDisplay.textContent = "Player has won the game!"
+        playGame = false
+        return true;
+    } else if (computerScore == 5) {
+        winDisplay.textContent = "Computer has won the game!"
+        playGame = false
+        return true;
+    } 
+    return false;
+}
+
+const btns = document.querySelectorAll('button')
+console.log(btns.length)
+btns.forEach(btn => btn.addEventListener('click', playRound))
+
+let playerScore = 0
+let computerScore = 0
+let playGame = true;
+
+const playDisplay = document.querySelector("#playScore")
+const compDisplay = document.querySelector("#compScore")
+const playSelect = document.querySelector("#playSelect")
+const compSelect = document.querySelector("#compSelect")
+const winDisplay = document.querySelector("#winner")
+
